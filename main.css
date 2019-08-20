@@ -1,0 +1,16 @@
+#map {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+}
+.as-box--border {
+    padding: 12px 12px 12px 12px;
+}
+textarea {
+    margin-top: 6px;
+}
+.as-textarea {
+    background-color: black;
+    color: var(--as--color--complementary);
+}

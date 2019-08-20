@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CARTO VL & Airship Template</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <!-- VueJS -->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+        
+        <!-- Airship -->
+        <link rel="stylesheet" href="https://libs.cartocdn.com/airship-style/v2.1.1/airship.css">
+        <link rel="stylesheet" href="https://libs.cartocdn.com/airship-icons/v2.1.1/icons.css">
+        <script src="https://libs.cartocdn.com/airship-components/v2.1.1/airship.js"></script>
+
+        <!-- Mapbox GL -->
+        <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.1/mapbox-gl.js"></script>
+        <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.1/mapbox-gl.css" rel="stylesheet" />
+
+        <!-- CARTO VL -->
+        <script src="https://libs.cartocdn.com/carto-vl/v1.3.1/carto-vl.min.js"></script>
+
+        <script src="./aoi.js"></script>
+
+        <link rel="stylesheet" href="./main.css">
+    
+    </head>
+    <body class="as-app-body">
+        <div class="as-app" id="app">
+            <as-responsive-content>
+                <!-- Sidebar -->
+                <aside class="as-sidebar as-sidebar--left as-sidebar--xl" data-name="Metrics">
+                    <div class="as-container">
+                        <section class="as-box as-box--border">
+                            <h1 class="as-title">CARTO VL  & Airship Template Map</h1>
+                            <h2 class="as-subheader as-font--medium">Aggregated Metrics</h2>
+                        </section>
+                        <section class="as-box as-box--border">
+                            <h2 class="as-subheader as-font--medium">Aggregated Metrics</h2>
+                            <div class="as-box">
+                                <p class="as-subheader">{{ formatter(cities) }} cities</p>
+                                <p class="as-subheader">{{ formatter(population) }} ihab.</p>
+                                <p class="as-subheader">{{ formatter(avgPop) }} inhab./city</p>
+                            </div>
+                        </section>
+                        <section class="as-box as-box--border">
+                            <h2 class="as-subheader as-font--medium">Categories</h2>
+                            <div class="as-box">
+                                <categories 
+                                heading="Type of Places"
+                                :visible-categories="5"
+                                :disable-interactivity="true"
+                                :showClearButton="false"
+                                :show-clear-button="false"
+                                :categories="placeTypes"
+                                >
+                                </categories>
+                            </div>
+                            <div class="as-box">
+                                <categories 
+                                heading="Countries"
+                                :visible-categories="5"
+                                :disable-interactivity="true"
+                                :showClearButton="false"
+                                :show-clear-button="false"
+                                :categories="countries"
+                                >
+                                </categories>
+                            </div>
+                        </section>
+                        <section class="as-box as-box--border">
+                            <h2 class="as-subheader as-font--medium">Distributions</h2>
+                            <div class="as-box">
+                                <histogram 
+                                  heading="Population"
+                                  :data="popHistogram"
+                                  >
+                                </histogram>
+                            </div>
+                        </section>
+                    </div>
+                </aside>
+
+                <main class="as-main">
+                    <div class="as-map-area">
+
+                        <!-- Map -->
+                        <div id="map"></div>
+
+                        <!-- Map Panels -->
+                        <div class="as-map-panels" data-name="Options">
+
+                            <!-- Visualization Options -->
+                            <div class="as-panel as-panel--top as-panel--right as-panel--vertical">
+                                <div class="as-panel__element">
+                                    <!-- Legend -->
+                                    <section class="as-box">
+                                        <h2 class="as-subheader as-font--medium">Legend</h2>
+                                        <div class="as-box">
+                                            <h2 class="as-subheader">Color</h2>
+                                            <ul>
+                                                <li class="as-radio">
+                                                  <input class="as-radio__input" type="radio" name="vizOptions" id="byCountry" value="country" v-model= "colorViz" />
+                                                  <label class="as-caption" for="byCountry">By Country</label>
+                                                </li>
+                                                <li class="as-radio">
+                                                  <input class="as-radio__input" type="radio" name="vizOptions" id="byPopulation" value="population" v-model= "colorViz" />
+                                                  <label class="as-caption" for="byPopulation">By Population</label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="as-box">
+                                            <h2 class="as-subheader">Size</h2>
+                                            <p class="as-body">By Population</p>
+                                            <as-legend-size-continuous-point 
+                                                id="size-legend" 
+                                                orientation="horizontal"
+                                            ></as-legend-size-continuous-point>
+                                        </div>        
+                                    </section>
+                                    <!-- Layer Selector -->
+                                    <section class="as-box">
+                                        <h2 class="as-subheader">Layer Selector</h2>
+                                        <div class="as-box">
+                                            <toggle v-model=aoi label="AOI visualizer"></toggle>
+                                            <template v-if="aoi" >
+                                                <textarea v-model="inputGeojson" class="as-textarea" type="text" rows="24"></textarea>
+                                            </template>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="as-map-footer" data-name="Filters">
+                        <section class="as-box as-box--border as-box--scroll">
+                            <div class="as-box">
+                                <h1 class="as-subheader as-font--medium">Place Types:</h1>
+                            </div>
+                            <div class="as-box">
+                                <div class="as-checkbox" v-for="place in placeTypesList">
+                                    <input class="as-checkbox-input" type="checkbox" :id="place" :name="place" :value="place" v-model="placeTypesChecked">
+                                    <span class="as-checkbox-decoration">
+                                        <svg class="as-checkbox-media">
+                                        <polyline class="as-checkbox-check" points="1.65093994 3.80255127 4.48919678 6.97192383 10.3794556 0.717346191"></polyline>
+                                        </svg>
+                                    </span>
+                                    <label class="as-caption" for="place">{{ place }}</label>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="as-box as-box--border">
+                            <div class="as-box">
+                                <h1 class="as-subheader as-font--medium">Population:</h1>
+                                <range-slider 
+                                    title="Filter by Population" 
+                                    v-model="rangePopulation" 
+                                    :min-value="1000" :max-value="12000000" :step="250"
+                                    :draggable="true" 
+                                    :format-value="formatter" 
+                                    >
+                                </range-slider>
+                            </div>
+                        </section>
+                        <section class="as-box as-box--border as-box--scroll">
+                            <div class="as-box">
+                                <h1 class="as-subheader as-font--medium">City Name:</h1>
+                                <input v-model="cityNames" class="as-input"></input>
+                                <div class="as-box">
+                                    <div class="as-banner">
+                                        <div class="as-banner__icon">
+                                            <i class="as-icon as-icon-info"></i>
+                                        </div>
+                                        <div class="as-banner__content">
+                                            Madrid, Berlin, Paris...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="as-box">
+                                <h1 class="as-subheader as-font--medium">Country Name:</h1>
+                                <input v-model="countryNames" class="as-input"></input>
+                                <div class="as-box">
+                                    <div class="as-banner">
+                                        <div class="as-banner__icon">
+                                            <i class="as-icon as-icon-info"></i>
+                                        </div>
+                                        <div class="as-banner__content">
+                                            Spain, Germany, France...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </footer>
+
+                </main>
+            </as-responsive-content>
+
+
+        </div>
+
+        <script src="./vue-components/vue-component-histogram.js"></script>
+        <script src="./vue-components/vue-component-category.js"></script>
+        <script src="./vue-components/vue-component-toggle.js"></script>
+        <script src="./vue-components/vue-component-range-slider.js"></script>
+        <script type="application/javascript" src='./vue-config.js'></script>
+        <script type="application/javascript" src='./utils.js'></script>
+        <script type="application/javascript" src='./main.js'></script>
+
+    </body>
+</html>
