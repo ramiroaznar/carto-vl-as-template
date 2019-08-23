@@ -8,6 +8,8 @@ const countryStyle = `
     @cities: viewPortCount()
     @population: viewPortSum($pop_max)
     @avgPop: viewPortAvg($pop_max)
+    @popMin: viewPortMin($pop_max)
+    @popMax: viewPortMax($pop_max)
 
     @countries: viewportHistogram($adm0name)
     @placeTypes: viewportHistogram($featurecla)
@@ -15,21 +17,12 @@ const countryStyle = `
     @popHistogram: viewportHistogram($pop_max, 10)
 `,
 
-    popStyle = `
-    @popMin: viewportMin($pop_max)
-    @popMax: viewportMax($pop_max)
-    color: opacity(ramp(linear($pop_max,@popMin,@popMax), sunset), 0.7)
-    strokeWidth: 0
-    width: scaled(sqrt($pop_max)/500)
+    countryColor = `
+    opacity(ramp($adm0name, bold), 0.7)
+    `,
 
-    @cities: viewPortCount()
-    @population: viewPortSum($pop_max)
-    @avgPop: viewPortAvg($pop_max)
-
-    @countries: viewportHistogram($adm0name)
-    @placeTypes: viewportHistogram($featurecla)
-
-    @popHistogram: viewportHistogram($pop_max, 10)
+    popColor = `
+    opacity(ramp(linear($pop_max,@popMin,@popMax), sunset), 0.7)
 `,
 
     aoiStyle = `
@@ -40,7 +33,8 @@ const countryStyle = `
 
 vm.aoiStyle = aoiStyle, 
 vm.countryStyle = countryStyle, 
-vm.popStyle = popStyle;
+vm.countryColor = countryColor;
+vm.popColor = popColor;
 
 // formatters
 

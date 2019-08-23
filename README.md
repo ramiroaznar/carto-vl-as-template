@@ -6,6 +6,6 @@ Live at: https://ramiroaznar.github.io/carto-vl-as-template/
 
 ## TBD
 
-- [ ] Clear or mantain filters when changing viz
+- [x] Clear or mantain filters when changing viz
 - [ ] Add dynamic legends
 - [ ] Improve layout

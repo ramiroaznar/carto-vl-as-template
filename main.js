@@ -30,7 +30,6 @@ document
         // create a CARTO VL layer
             const source = new carto.source.Dataset(`ne_10m_populated_places_simple`),
             viz = new carto.Viz(countryStyle),
-            popViz = new carto.Viz(popStyle),
             layer = new carto.Layer('layer', source, viz);
 
         // add CARTO VL layers to the map
@@ -47,7 +46,7 @@ document
         // attach layer and map objects to the Vue instance
         // to be used in the vue config    
         vm.aoiViz = aoiViz, vm.aoiLayer = aoiLayer, 
-        vm.popViz = popViz, vm.viz = viz, vm.layer = layer,
+        vm.viz = viz, vm.layer = layer,
         vm.map = map;
 
         layer.on('updated' , function () {

@@ -27,14 +27,6 @@ const vm = new Vue({
         formatter: numbFormatter.format
     },
     computed: {
-        visualization: function() {
-            // toggle viz object to make the filters work
-            if (this.colorViz == 'country') {
-                return this.viz;
-            } else {
-                return this.popViz;
-            }
-        },
         filters: function() {
             // append all filters
             let filterConditions = [];
@@ -67,43 +59,41 @@ const vm = new Vue({
     },
     watch: {
         colorViz: function(value) {
-            // toggle visualization styles
+            // toggle viz styles
             if (value == 'country') {
-                this.layer.blendToViz(this.viz);
-                this.clearFilters();
+                this.viz.color.blendTo(this.countryColor);
             } else {
-                this.layer.blendToViz(this.popViz);
-                this.clearFilters();
+                this.viz.color.blendTo(this.popColor);
             }
         },
         placeTypesChecked: function(value) {
             if (value.length > 0) {
                 // apply filters if filter is applied
-                this.visualization.filter.blendTo(this.filters);
+                this.viz.filter.blendTo(this.filters);
             } else {
                 // disable filters if filter is not applied
-                this.visualization.filter.blendTo('true');
+                this.viz.filter.blendTo('true');
             }  
         },
         rangePopulation: function(value) {
             if (value.length > 0) {
-                this.visualization.filter.blendTo(this.filters);
+                this.viz.filter.blendTo(this.filters);
             } else {
-                this.visualization.filter.blendTo('true');
+                this.viz.filter.blendTo('true');
             }  
         },
         countryNames: function(value) {
             if (value.length > 0) {
-                this.visualization.filter.blendTo(this.filters);
+                this.viz.filter.blendTo(this.filters);
             } else {
-                this.visualization.filter.blendTo('true');
+                this.viz.filter.blendTo('true');
             }
         },
         cityNames: function(value) {
             if (value.length > 0) {
-                this.visualization.filter.blendTo(this.filters);
+                this.viz.filter.blendTo(this.filters);
             } else {
-                this.visualization.filter.blendTo('true');
+                this.viz.filter.blendTo('true');
             }
         },
         aoi: function(value) {
@@ -119,14 +109,6 @@ const vm = new Vue({
             // change aoi geometry when textarea is updated
             const newSource = new carto.source.GeoJSON(JSON.parse(value));
             this.aoiLayer.update(newSource, this.aoiViz);
-        }
-    },
-    methods: {
-        clearFilters: function() {
-            this.placeTypesChecked = this.placeTypesList
-            this.taskNames = '';
-            this.customerNames = '';
-            // TBD
         }
     }
 });
