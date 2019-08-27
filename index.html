@@ -100,14 +100,18 @@
                                             <h2 class="as-subheader">Color</h2>
                                             <ul>
                                                 <li class="as-radio">
-                                                  <input class="as-radio__input" type="radio" name="vizOptions" id="byCountry" value="country" v-model= "colorViz" />
-                                                  <label class="as-caption" for="byCountry">By Country</label>
+                                                  <input class="as-radio__input" type="radio" name="vizOptions" id="byFeatureClass" value="featureclass" v-model= "colorViz" />
+                                                  <label class="as-caption" for="byFeatureClass">By Type</label>
                                                 </li>
                                                 <li class="as-radio">
                                                   <input class="as-radio__input" type="radio" name="vizOptions" id="byPopulation" value="population" v-model= "colorViz" />
                                                   <label class="as-caption" for="byPopulation">By Population</label>
                                                 </li>
                                             </ul>
+                                            <legend 
+                                            orientation="vertical"
+                                            :data="computedLegendData"
+                                            ></legend>
                                         </div>
                                         <div class="as-box">
                                             <h2 class="as-subheader">Size</h2>
@@ -208,6 +212,7 @@
         <script src="./vue-components/vue-component-category.js"></script>
         <script src="./vue-components/vue-component-toggle.js"></script>
         <script src="./vue-components/vue-component-range-slider.js"></script>
+        <script src="./vue-components/vue-component-legend.js"></script>
         <script type="application/javascript" src='./vue-config.js'></script>
         <script type="application/javascript" src='./utils.js'></script>
         <script type="application/javascript" src='./main.js'></script>

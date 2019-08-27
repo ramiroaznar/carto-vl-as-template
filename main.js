@@ -54,7 +54,8 @@ document
             // update aggregated metrics
             vm.cities = viz.variables.cities.value,
             vm.population = viz.variables.population.value,
-            vm.avgPop = viz.variables.avgPop.value;
+            vm.avgPop = viz.variables.avgPop.value,
+            vm.legendData = layer.viz.color.getLegendData().data;
 
             // update category widgets
             vm.placeTypes = viz.variables.placeTypes.value.map( c => {

@@ -17,7 +17,8 @@ const vm = new Vue({
         placeTypes: [],
         popHistogram: [],
         rangePopulation: null,
-        colorViz: 'country',
+        colorViz: 'featureclass',
+        legendData: [],
         aoi: false,
         placeTypesList: ['Populated place','Admin-0 capital','Admin-1 capital', 'Admin-1 region capital', 'Admin-0 region capital'],
         placeTypesChecked: ['Populated place','Admin-0 capital','Admin-1 capital', 'Admin-1 region capital', 'Admin-0 region capital'],
@@ -27,6 +28,19 @@ const vm = new Vue({
         formatter: numbFormatter.format
     },
     computed: {
+        computedLegendData: function() {
+            const data = [];
+            for (let index = 0; index < this.legendData.length; index++) {
+                const element = this.legendData[index];
+                data.push({
+                    color: this.rgbToHex(element['value']),
+                    label: element['key'],
+                    type: 'point',
+                    width: 16
+                })
+            }
+            return data;
+        },
         filters: function() {
             // append all filters
             let filterConditions = [];
@@ -60,8 +74,8 @@ const vm = new Vue({
     watch: {
         colorViz: function(value) {
             // toggle viz styles
-            if (value == 'country') {
-                this.viz.color.blendTo(this.countryColor);
+            if (value == 'featureclass') {
+                this.viz.color.blendTo(this.typeColor);
             } else {
                 this.viz.color.blendTo(this.popColor);
             }
@@ -109,6 +123,11 @@ const vm = new Vue({
             // change aoi geometry when textarea is updated
             const newSource = new carto.source.GeoJSON(JSON.parse(value));
             this.aoiLayer.update(newSource, this.aoiViz);
+        }
+    },
+    methods: {
+        rgbToHex: function (color) {
+            return "#" + ((1 << 24) + (color.r << 16) + (color.g << 8) + color.b).toString(16).slice(1);
         }
     }
 });

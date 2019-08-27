@@ -1,7 +1,7 @@
 // viz string styles
 
 const countryStyle = `
-    color: opacity(ramp($adm0name, bold), 0.7)
+    color: opacity(ramp($featurecla, bold), 0.7)
     strokeWidth: 0
     width: scaled(sqrt($pop_max)/500)
 
@@ -17,8 +17,8 @@ const countryStyle = `
     @popHistogram: viewportHistogram($pop_max, 10)
 `,
 
-    countryColor = `
-    opacity(ramp($adm0name, bold), 0.7)
+    typeColor = `
+    opacity(ramp($featurecla, bold), 0.7)
     `,
 
     popColor = `
@@ -33,7 +33,7 @@ const countryStyle = `
 
 vm.aoiStyle = aoiStyle, 
 vm.countryStyle = countryStyle, 
-vm.countryColor = countryColor;
+vm.typeColor = typeColor;
 vm.popColor = popColor;
 
 // formatters
